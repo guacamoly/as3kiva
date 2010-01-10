@@ -182,7 +182,7 @@ package com.humsara.kiva
 		 * Search and sort lender listings based on multiple criteria.
 		 * http://api.kivaws.org/v1/lenders/search.json
 		 * @param	page
-		 * @param	params : sort_by,country_code,occupation
+		 * @param	params : q,sort_by,country_code,occupation
 		 */
 		public function searchLenders ( page:Number = 1,params:Object = null )
 		{
