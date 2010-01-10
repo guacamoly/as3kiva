@@ -42,6 +42,17 @@ package com.humsara.kiva
 		public static const SORT_EXPIRATION:String = "expiration";
 		public static const SORT_AMOUNT_REM:String = "amount_remaining";
 		public static const SORT_REPAYMENT_T:String = "repayment_term";
+		public static const SORT_RECOMMENDATION_C = "recommendation_count";
+		public static const SORT_COMMENT_C = "comment_count"
+		public static const MEDIA_ANY = "any";
+		public static const MEDIA_VIDEO = "video";
+		public static const MEDIA_IMAGE = "image";
+		public static const STATUS_FUNDRAISING = "fundraising";
+		public static const STATUS_FUNDED = "funded";
+		public static const STATUS_IN_REPAYMENT = "in_repayment";
+		public static const STATUS_PAID = "paid";
+		public static const STATUS_DEFAULTED= "defaulted";
+		
 		public static const IMG_80x80:String = "w80h80";
 		public static const IMG_200x200:String = "w200h200"; // default
 		public static const IMG_325x250:String = "w325h250";
