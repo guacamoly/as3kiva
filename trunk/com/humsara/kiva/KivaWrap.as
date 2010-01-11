@@ -24,6 +24,7 @@
 package com.humsara.kiva 
 {
 	import com.adobe.serialization.json.JSON;
+	
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.net.URLLoader;
@@ -42,16 +43,16 @@ package com.humsara.kiva
 		public static const SORT_EXPIRATION:String = "expiration";
 		public static const SORT_AMOUNT_REM:String = "amount_remaining";
 		public static const SORT_REPAYMENT_T:String = "repayment_term";
-		public static const SORT_RECOMMENDATION_C = "recommendation_count";
-		public static const SORT_COMMENT_C = "comment_count"
-		public static const MEDIA_ANY = "any";
-		public static const MEDIA_VIDEO = "video";
-		public static const MEDIA_IMAGE = "image";
-		public static const STATUS_FUNDRAISING = "fundraising";
-		public static const STATUS_FUNDED = "funded";
-		public static const STATUS_IN_REPAYMENT = "in_repayment";
-		public static const STATUS_PAID = "paid";
-		public static const STATUS_DEFAULTED= "defaulted";
+		public static const SORT_RECOMMENDATION_C:String = "recommendation_count";
+		public static const SORT_COMMENT_C:String = "comment_count"
+		public static const MEDIA_ANY:String = "any";
+		public static const MEDIA_VIDEO:String = "video";
+		public static const MEDIA_IMAGE:String = "image";
+		public static const STATUS_FUNDRAISING:String = "fundraising";
+		public static const STATUS_FUNDED:String = "funded";
+		public static const STATUS_IN_REPAYMENT:String = "in_repayment";
+		public static const STATUS_PAID:String = "paid";
+		public static const STATUS_DEFAULTED:String = "defaulted";
 		
 		public static const IMG_80x80:String = "w80h80";
 		public static const IMG_200x200:String = "w200h200"; // default
@@ -79,7 +80,7 @@ package com.humsara.kiva
 		{
 		}
 		
-		private function dispatchHelper ( data, type ):void  {
+		private function dispatchHelper ( data:String, type:String ):void  {
 			if ( dispatchMode == KivaWrap.DISPATCH_COMPLETE || dispatchMode == KivaWrap.DISPATCH_BOTH ) {
 				var ev:KivaWrapEvent = new KivaWrapEvent( KivaWrapEvent.COMPLETE );
 				ev.reqType = type;
@@ -111,7 +112,7 @@ package com.humsara.kiva
 			var url:String = API_BASE_URL + "/lenders/" + lenders.toString() + "." + returnType + args;
 			
 			trace ( "KivaWrap::getLenderDetails:: " + url);
-			var loader = new URLLoader();
+			var loader:URLLoader = new URLLoader();
 			loader.addEventListener (Event.COMPLETE, onGetLenderDetails);
 			
 			loader.load( new URLRequest(url));
@@ -136,7 +137,7 @@ package com.humsara.kiva
 			var url:String = API_BASE_URL + "/lenders/" + lenderID + "/loans." + returnType + args;
 			
 			trace ( "KivaWrap::getLenderLoans:: " + url);
-			var loader = new URLLoader();
+			var loader:URLLoader = new URLLoader();
 			loader.addEventListener (Event.COMPLETE, onGetLenderLoans);
 			
 			loader.load( new URLRequest(url));
@@ -159,7 +160,7 @@ package com.humsara.kiva
 			var url:String = API_BASE_URL + "/lenders/" + lenderID + "/teams." + returnType + args;
 			
 			trace ( "KivaWrap::getLenderTeams:: " + url);
-			var loader = new URLLoader();
+			var loader:URLLoader = new URLLoader();
 			loader.addEventListener (Event.COMPLETE, onGetLenderTeams);
 			
 			loader.load( new URLRequest(url));
@@ -180,7 +181,7 @@ package com.humsara.kiva
 			var url:String = API_BASE_URL + "/lenders/newest." + returnType + args;
 			
 			trace ( "KivaWrap::getLendersNewest:: " + url);
-			var loader = new URLLoader();
+			var loader:URLLoader = new URLLoader();
 			loader.addEventListener (Event.COMPLETE, onGetNewestLenders);
 			loader.load( new URLRequest(url));
 		}
@@ -213,7 +214,7 @@ package com.humsara.kiva
 			var url:String = API_BASE_URL + "/lenders/search." + returnType + args;
 			
 			trace ( "KivaWrap::getLendersSearch:: " + url);
-			var loader = new URLLoader();
+			var loader:URLLoader = new URLLoader();
 			loader.addEventListener (Event.COMPLETE, onGetLendersSearch);
 			loader.load( new URLRequest(url));
 		}
@@ -229,7 +230,7 @@ package com.humsara.kiva
 		public function getLoanDetails ( ids:Array ):void {
 			var url:String = API_BASE_URL + "/loans/"+ ids.toString() +"."+ returnType  + "?appID="+appID
 			trace ( "KivaWrap::getLoanDetails:: " + url);
-			var loader = new URLLoader();
+			var loader:URLLoader = new URLLoader();
 			loader.addEventListener (Event.COMPLETE, onGetLoanDetails);
 			loader.load( new URLRequest(url));
 		}
@@ -248,7 +249,7 @@ package com.humsara.kiva
 			var args:String = "?page=" + page + "&include_bulk=" + (include_bulk?'1':'0') + "&appID="+appID;
 			var url:String = API_BASE_URL + "/loans/" + loanID + "/journal_entries." + returnType + args;
 			trace ( "KivaWrap::getLoanJournal:: " + url);
-			var loader = new URLLoader();
+			var loader:URLLoader = new URLLoader();
 			loader.addEventListener (Event.COMPLETE, onGetLoanJournal);
 			loader.load( new URLRequest(url));
 		}
@@ -266,7 +267,7 @@ package com.humsara.kiva
 			var args:String = "?page=" + page + "&appID="+appID;
 			var url:String = API_BASE_URL + "/loans/" + loanID + "/lenders." + returnType + args;
 			trace ( "KivaWrap::getLoanLenders:: " + url);
-			var loader = new URLLoader();
+			var loader:URLLoader = new URLLoader();
 			loader.addEventListener (Event.COMPLETE, onGetLoanLenders);
 			loader.load( new URLRequest(url)); 
 		}
@@ -281,7 +282,7 @@ package com.humsara.kiva
 		 */
 		public function getLoanUpdates ( loanID:Number  ):void {
 			var url:String = API_BASE_URL + "/loans/" + loanID + "/updates." + returnType + "?appID="+appID;
-			var loader = new URLLoader();
+			var loader:URLLoader = new URLLoader();
 			trace ( "KivaWrap::getLoanUpdates:: " + url);
 			loader.addEventListener (Event.COMPLETE, onGetLoanUpdates);
 			loader.load( new URLRequest(url)); 
@@ -298,7 +299,7 @@ package com.humsara.kiva
 		 */
 		public function getNewestLoans (page:Number = 1 ):void {
 			var url:String = API_BASE_URL + "/loans/newest." + returnType + "?appID="+appID;
-			var loader = new URLLoader();
+			var loader:URLLoader = new URLLoader();
 			trace ( "KivaWrap::getLoansNewest:: " + url);
 			loader.addEventListener (Event.COMPLETE, onGetLoansNewest);
 			loader.load( new URLRequest(url)); 
@@ -335,7 +336,7 @@ package com.humsara.kiva
 			}
 			var url:String = API_BASE_URL + "/loans/search." + returnType + args;
 			trace ( "KivaWrap::getLoansSearch:: " + url);
-			var loader = new URLLoader();
+			var loader:URLLoader = new URLLoader();
 			loader.addEventListener (Event.COMPLETE, onGetLoansSearch);
 			loader.load( new URLRequest(url)); 
 		}
@@ -354,7 +355,7 @@ package com.humsara.kiva
 			var args:String = "?page=" + page + "&appID="+appID;
 			var url:String = API_BASE_URL + "/journal_entries/"+journal_id+"/comments." + returnType + args;
 			trace ( "KivaWrap::getJournalComments:: " + url);
-			var loader = new URLLoader();
+			var loader:URLLoader = new URLLoader();
 			loader.addEventListener (Event.COMPLETE, onGetJournalComments);
 			loader.load( new URLRequest(url)); 
 		}
@@ -387,7 +388,7 @@ package com.humsara.kiva
 			}
 			var url:String = API_BASE_URL + "/journal_entries/search." + returnType + args;
 			trace ( "KivaWrap::getJournalSearch:: " + url);
-			var loader = new URLLoader();
+			var loader:URLLoader = new URLLoader();
 			loader.addEventListener (Event.COMPLETE, onGetJournalSearch);
 			loader.load( new URLRequest(url)); 
 		}
@@ -403,7 +404,7 @@ package com.humsara.kiva
 		public function getRecentLendingActions ():void {
 			var url:String = API_BASE_URL + "/lending_actions/recent." + returnType + "?appID="+appID;
 			trace ( "KivaWrap::getRecentLendingActions:: " + url);
-			var loader = new URLLoader();
+			var loader:URLLoader = new URLLoader();
 			loader.addEventListener (Event.COMPLETE, onGetRecentLendingActions);
 			loader.load( new URLRequest(url));
 		}
@@ -420,7 +421,7 @@ package com.humsara.kiva
 		public function getPartnersList (page:Number=1):void {
 			var url:String = API_BASE_URL + "/partners." + returnType + "?page="+page + "&appID="+appID;
 			trace ( "KivaWrap::getPartnersList:: " + url);
-			var loader = new URLLoader();
+			var loader:URLLoader = new URLLoader();
 			loader.addEventListener (Event.COMPLETE, onGetPartnersList);
 			loader.load( new URLRequest(url));
 		}
@@ -437,7 +438,7 @@ package com.humsara.kiva
 			
 			var url:String = API_BASE_URL + "/teams/" + teamIDs.toString() + "." + returnType  + "?appID="+appID;;
 			trace ( "KivaWrap::getTeamDetails:: " + url);
-			var loader = new URLLoader();
+			var loader:URLLoader = new URLLoader();
 			loader.addEventListener (Event.COMPLETE, onGetTeamDetails);
 			loader.load( new URLRequest(url));
 		}
@@ -457,7 +458,7 @@ package com.humsara.kiva
 			var args:String = "?page=" + page + "&sort=" + sort + "&appID="+appID;
 			var url:String = API_BASE_URL + "/teams/" + String(teamID) + "/lenders." + returnType + args;
 			trace ( "KivaWrap::getTeamLenders:: " + url);
-			var loader = new URLLoader();
+			var loader:URLLoader = new URLLoader();
 			loader.addEventListener (Event.COMPLETE, onGetTeamLenders);
 			loader.load( new URLRequest(url));
 		}
@@ -476,7 +477,7 @@ package com.humsara.kiva
 			var args:String = "?page=" + page + "&sort=" + sort + "&appID=" + appID;
 			var url:String = API_BASE_URL + "/teams/" + String(teamID) + "/loans." + returnType + args;
 			trace ( "KivaWrap::getTeamLoans:: " + url);
-			var loader = new URLLoader();
+			var loader:URLLoader = new URLLoader();
 			loader.addEventListener (Event.COMPLETE, onGetTeamLoans);
 			loader.load( new URLRequest(url));
 		}
@@ -499,7 +500,7 @@ package com.humsara.kiva
 			}
 			var url:String = API_BASE_URL + "/teams/search." + returnType + args;
 			trace ( "KivaWrap::getTeamSearch:: " + url);
-			var loader = new URLLoader();
+			var loader:URLLoader = new URLLoader();
 			loader.addEventListener (Event.COMPLETE, onGetTeamsSearch);
 			loader.load( new URLRequest(url)); 
 		}
@@ -516,7 +517,7 @@ package com.humsara.kiva
 			var args:String = "?appID=" + appID;
 			var url:String = API_BASE_URL + "/teams/using_shortname/" + names.toString() + "." + returnType + args;
 			trace ( "KivaWrap::getTeamDetailsByShortname:: " + url);
-			var loader = new URLLoader();
+			var loader:URLLoader = new URLLoader();
 			loader.addEventListener (Event.COMPLETE, onGetTeamDetailsByShortname);
 			loader.load( new URLRequest(url)); 
 		}
