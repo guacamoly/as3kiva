@@ -62,12 +62,35 @@ package com.humsara.kiva
 		public static const IMG_URL_TMPL:String = "http://www.kiva.org/img/<size>/<id>.jpg"
 		public static const API_BASE_URL:String = "http://api.kivaws.org/v1";
 		
+		// dispatch KivaWrapEvent of types associated to each method   - DEFAULT
+		public static const DISPATCH_UNIQUE:String = "dispatchUnique";
+		// dispatch KivaWrapEvent of type "COMPLETE" for all methods
+		public static const DISPATCH_COMPLETE:String = "dispatchComplete";
+		// dispatch both UNIQUE types and COMPLETE types for all methods
+		public static const DISPATCH_BOTH:String = "dispatchBoth";
+		
 		// changeable properties
-		public var _appID:String = "com.humsara.as3.kivaAPIwrap";
-		public var _returnType:String = "json";
+		private var _appID:String = "com.humsara.as3.kivaAPIwrap";
+		private var _returnType:String = TYPE_JSON;
+		private var _dispatchMode:String = DISPATCH_UNIQUE;
+		public var formatResult:Boolean = true;
 		
 		public function KivaWrap() 
 		{
+		}
+		
+		private function dispatchHelper ( data, type ):void  {
+			if ( dispatchMode == KivaWrap.DISPATCH_COMPLETE || dispatchMode == KivaWrap.DISPATCH_BOTH ) {
+				var ev:KivaWrapEvent = new KivaWrapEvent( KivaWrapEvent.COMPLETE );
+				ev.reqType = type;
+				formatToTypeAndDispatch(ev, data);
+			}
+			
+			if ( dispatchMode == KivaWrap.DISPATCH_UNIQUE || dispatchMode == KivaWrap.DISPATCH_BOTH ) {
+				var ev2:KivaWrapEvent = new KivaWrapEvent ( type );
+				ev2.reqType = type;
+				formatToTypeAndDispatch (ev2, data);
+			}
 		}
 		
 		// creates a standard web url for the imageID provided
@@ -97,10 +120,7 @@ package com.humsara.kiva
 		private function onGetLenderDetails ( e:Event ):void {
 			var data:String = e.target.data;
 			
-			// create kivawrapevent for dispatching
-			var ev:KivaWrapEvent = new KivaWrapEvent(KivaWrapEvent.LENDER_DETAILS);
-			
-			formatToTypeAndDispatch ( ev, data );
+			dispatchHelper(data, KivaWrapEvent.LENDER_DETAILS);
 		}
 		
 		/**
@@ -124,11 +144,7 @@ package com.humsara.kiva
 		private function onGetLenderLoans ( e:Event ):void {
 			// get data from api call
 			var data:String = e.target.data;
-			
-			// create kivawrapevent for dispatching
-			var ev:KivaWrapEvent = new KivaWrapEvent(KivaWrapEvent.LENDER_LOANS);
-			
-			formatToTypeAndDispatch ( ev, data );
+			dispatchHelper(data, KivaWrapEvent.LENDER_LOANS);
 		}
 		
 		/**
@@ -138,7 +154,7 @@ package com.humsara.kiva
 		 * @param	lenderID
 		 * @param	page
 		 */
-		public function getLenderTeams ( lenderID:String, page:Number = 1 ) {
+		public function getLenderTeams ( lenderID:String, page:Number = 1 ):void {
 			var args:String = "?page=" + page + "&appID="+appID;;
 			var url:String = API_BASE_URL + "/lenders/" + lenderID + "/teams." + returnType + args;
 			
@@ -150,9 +166,7 @@ package com.humsara.kiva
 		}
 		private function onGetLenderTeams ( e:Event ):void {
 			var data:String = e.target.data;
-			// create kivawrapevent for dispatching
-			var ev:KivaWrapEvent = new KivaWrapEvent(KivaWrapEvent.LENDER_TEAMS);
-			formatToTypeAndDispatch ( ev, data );
+			dispatchHelper(data, KivaWrapEvent.LENDER_TEAMS);
 		}
 		
 		/**
@@ -161,7 +175,7 @@ package com.humsara.kiva
 		 * http://api.kivaws.org/v1/lenders/newest.json
 		 * @param	page
 		 */
-		public function getNewestLenders ( page:Number = 1 ) {
+		public function getNewestLenders ( page:Number = 1 ):void {
 			var args:String = "?page=" + page + "&appID="+appID;;
 			var url:String = API_BASE_URL + "/lenders/newest." + returnType + args;
 			
@@ -172,9 +186,7 @@ package com.humsara.kiva
 		}
 		private function onGetNewestLenders ( e:Event ):void {
 			var data:String = e.target.data;
-			// create kivawrapevent for dispatching
-			var ev:KivaWrapEvent = new KivaWrapEvent(KivaWrapEvent.LENDER_NEWEST);
-			formatToTypeAndDispatch ( ev, data );
+			dispatchHelper(data, KivaWrapEvent.LENDER_NEWEST);
 		}
 		
 		/**
@@ -184,8 +196,7 @@ package com.humsara.kiva
 		 * @param	page
 		 * @param	params : q,sort_by,country_code,occupation
 		 */
-		public function searchLenders ( page:Number = 1,params:Object = null )
-		{
+		public function searchLenders ( page:Number = 1,params:Object = null ):void{
 			var args:String = "?page=" + page + "&appID="+appID;
 			if ( params != null ) {
 				for ( var i:String in params ) {
@@ -208,9 +219,7 @@ package com.humsara.kiva
 		}
 		private function onGetLendersSearch ( e:Event ):void {
 			var data:String = e.target.data;
-			// create kivawrapevent for dispatching
-			var ev:KivaWrapEvent = new KivaWrapEvent(KivaWrapEvent.LENDER_SEARCH);
-			formatToTypeAndDispatch ( ev, data );
+			dispatchHelper(data, KivaWrapEvent.LENDER_SEARCH);
 		} 
 		
 		/**
@@ -226,8 +235,7 @@ package com.humsara.kiva
 		}
 		private function onGetLoanDetails ( e:KivaWrapEvent ):void {
 			var data:String = e.target.data;
-			var ev:KivaWrapEvent = new KivaWrapEvent(KivaWrapEvent.LOAN_DETAILS);
-			formatToTypeAndDispatch ( ev, data );
+			dispatchHelper(data, KivaWrapEvent.LOAN_DETAILS);
 		}
 		
 		/**
@@ -246,8 +254,7 @@ package com.humsara.kiva
 		}
 		private function onGetLoanJournal ( e:Event ):void  {
 			var data:String = e.target.data;
-			var ev:KivaWrapEvent = new KivaWrapEvent(KivaWrapEvent.LOAN_JOURNAL);
-			formatToTypeAndDispatch(ev, data);
+			dispatchHelper(data, KivaWrapEvent.LOAN_JOURNAL);
 		}
 		
 		/**
@@ -265,8 +272,7 @@ package com.humsara.kiva
 		}
 		private function onGetLoanLenders ( e:Event ):void  {
 			var data:String = e.target.data;
-			var ev:KivaWrapEvent = new KivaWrapEvent(KivaWrapEvent.LOAN_LENDERS);
-			formatToTypeAndDispatch(ev, data);
+			dispatchHelper(data, KivaWrapEvent.LOAN_LENDERS);
 		}
 		
 		/**
@@ -282,8 +288,7 @@ package com.humsara.kiva
 		}
 		private function onGetLoanUpdates ( e:Event ):void  {
 			var data:String = e.target.data;
-			var ev:KivaWrapEvent = new KivaWrapEvent(KivaWrapEvent.LOAN_UPDATES);
-			formatToTypeAndDispatch(ev, data);
+			dispatchHelper(data, KivaWrapEvent.LOAN_UPDATES);
 		}
 		
 		
@@ -300,8 +305,7 @@ package com.humsara.kiva
 		}
 		private function onGetLoansNewest ( e:Event ):void  {
 			var data:String = e.target.data;
-			var ev:KivaWrapEvent = new KivaWrapEvent(KivaWrapEvent.LOAN_NEWEST);
-			formatToTypeAndDispatch(ev, data);
+			dispatchHelper(data, KivaWrapEvent.LOAN_NEWEST);
 		}
 		
 		
@@ -310,8 +314,7 @@ package com.humsara.kiva
 		 * @param	page
 		 * @param	params  status,gender,region,country_code,sector,partner,sort_by,q,has_currency_loss
 		 */
-		public function searchLoans ( page:Number = 1,params:Object = null )
-		{
+		public function searchLoans ( page:Number = 1,params:Object = null ):void {
 			var args:String = "?page=" + page + "&appID="+appID;
 			if ( params != null ) {
 				for ( var i:String in params ) {
@@ -338,8 +341,7 @@ package com.humsara.kiva
 		}
 		private function onGetLoansSearch ( e:Event ):void  {
 			var data:String = e.target.data;
-			var ev:KivaWrapEvent = new KivaWrapEvent(KivaWrapEvent.LOAN_SEARCH);
-			formatToTypeAndDispatch(ev, data);
+			dispatchHelper(data, KivaWrapEvent.LOAN_SEARCH);
 		}
 		
 		
@@ -358,8 +360,7 @@ package com.humsara.kiva
 		}
 		private function onGetJournalComments ( e:Event ):void  {
 			var data:String = e.target.data;
-			var ev:KivaWrapEvent = new KivaWrapEvent(KivaWrapEvent.JOURNAL_COMMENTS);
-			formatToTypeAndDispatch(ev, data);
+			dispatchHelper(data, KivaWrapEvent.JOURNAL_COMMENTS);
 		}
 		
 		
@@ -392,8 +393,7 @@ package com.humsara.kiva
 		}
 		private function onGetJournalSearch ( e:Event ):void {
 			var data:String = e.target.data;
-			var ev:KivaWrapEvent = new KivaWrapEvent(KivaWrapEvent.JOURNAL_SEARCH);
-			formatToTypeAndDispatch(ev, data);
+			dispatchHelper(data, KivaWrapEvent.JOURNAL_SEARCH);
 		}
 		
 		
@@ -409,8 +409,7 @@ package com.humsara.kiva
 		}
 		private function onGetRecentLendingActions (e:Event):void {
 			var data:String = e.target.data;
-			var ev:KivaWrapEvent = new KivaWrapEvent(KivaWrapEvent.LEND_ACTIONS);
-			formatToTypeAndDispatch(ev, data);
+			dispatchHelper(data, KivaWrapEvent.LEND_ACTIONS);
 		}
 		
 		
@@ -427,8 +426,7 @@ package com.humsara.kiva
 		}
 		private function onGetPartnersList (e:Event):void {
 			var data:String = e.target.data;
-			var ev:KivaWrapEvent = new KivaWrapEvent(KivaWrapEvent.PARTNERS_LIST);
-			formatToTypeAndDispatch(ev, data);
+			dispatchHelper(data, KivaWrapEvent.PARTNERS_LIST);
 		}
 		
 		/**
@@ -445,8 +443,7 @@ package com.humsara.kiva
 		}
 		private function onGetTeamDetails (e:Event):void {
 			var data:String = e.target.data;
-			var ev:KivaWrapEvent = new KivaWrapEvent(KivaWrapEvent.TEAM_DETAILS);
-			formatToTypeAndDispatch(ev, data);
+			dispatchHelper(data, KivaWrapEvent.TEAM_DETAILS);
 		}
 		
 		
@@ -466,8 +463,7 @@ package com.humsara.kiva
 		}
 		private function onGetTeamLenders (e:Event):void {
 			var data:String = e.target.data;
-			var ev:KivaWrapEvent = new KivaWrapEvent(KivaWrapEvent.TEAM_LENDERS);
-			formatToTypeAndDispatch(ev, data);
+			dispatchHelper(data, KivaWrapEvent.TEAM_LENDERS);
 		}
 		
 		/**
@@ -486,8 +482,7 @@ package com.humsara.kiva
 		}
 		private function onGetTeamLoans (e:Event):void {
 			var data:String = e.target.data;
-			var ev:KivaWrapEvent = new KivaWrapEvent(KivaWrapEvent.TEAM_LOANS);
-			formatToTypeAndDispatch(ev, data);
+			dispatchHelper(data, KivaWrapEvent.TEAM_LOANS);
 		}
 		
 		/**
@@ -495,7 +490,7 @@ package com.humsara.kiva
 		 * @param	page
 		 * @param	params : membership_type,category,sort_by,q
 		 */
-		public function searchTeams ( page:Number = 1, params:Object = null ) {
+		public function searchTeams ( page:Number = 1, params:Object = null ):void {
 			var args:String = "?page=" + page + "&appID="+appID;
 			if ( params != null ) {
 				for ( var i:String in params ) {
@@ -510,8 +505,7 @@ package com.humsara.kiva
 		}
 		private function onGetTeamsSearch ( e:Event ):void  {
 			var data:String = e.target.data;
-			var ev:KivaWrapEvent = new KivaWrapEvent(KivaWrapEvent.TEAM_SEARCH);
-			formatToTypeAndDispatch(ev, data);
+			dispatchHelper(data, KivaWrapEvent.TEAM_SEARCH);
 		}
 		
 		/**
@@ -528,8 +522,7 @@ package com.humsara.kiva
 		}
 		private function onGetTeamDetailsByShortname ( e:Event ):void  {
 			var data:String = e.target.data;
-			var ev:KivaWrapEvent = new KivaWrapEvent(KivaWrapEvent.TEAM_DETAILS_BYNAME);
-			formatToTypeAndDispatch(ev, data);
+			dispatchHelper(data, KivaWrapEvent.TEAM_DETAILS_BYNAME);
 		}
 		
 		
@@ -538,7 +531,7 @@ package com.humsara.kiva
 			switch ( returnType ) {
 				case TYPE_JSON:
 					ev.format = TYPE_JSON;
-					ev.data = JSON.decode(data);
+					ev.data = formatResult ? JSON.decode(data) : data;
 				break;
 				
 				case TYPE_HTML:
@@ -548,7 +541,7 @@ package com.humsara.kiva
 				
 				case TYPE_XML:
 					ev.format = TYPE_XML;
-					ev.data = new XML(data);
+					ev.data = formatResult ? new XML(data) : data;
 				break;
 			}
 			
@@ -564,6 +557,11 @@ package com.humsara.kiva
 			_returnType = value;
 		}
 		public function get returnType ():String { return _returnType; }
+		
+		public function set dispatchMode (value:String):void {
+			_dispatchMode = value;
+		}
+		public function get dispatchMode():String { return _dispatchMode; }
 	}
 
 }
