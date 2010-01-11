@@ -32,7 +32,10 @@ package com.humsara.kiva
 	public class KivaWrapEvent extends Event 
 	{
 		public var data:*;
+		public var reqType:String;
 		public var format:String;
+			
+		public static const COMPLETE:String = "dataRecieved";
 		
 		public static const LENDER_DETAILS:String = "lenderDetails";
 		public static const LENDER_LOANS:String = "lenderLoans";
